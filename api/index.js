@@ -39,6 +39,7 @@ const authMiddleware = (req, res, next) => {
     console.log(req.cookies['token']);
     if (!token) return res.redirect('/login');
     try {
+        console.log(jwt.verify(token.split(' ')[1], 'secret'));
         req.user = jwt.verify(token.split(' ')[1], 'secret');
         next();
     } catch (error) {

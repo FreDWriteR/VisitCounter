@@ -73,7 +73,7 @@ app.post('/login', (req, res) => {
 });
 
 // Защищенный маршрут для отображения статистики
-app.get('/stats', (req, res) => {
+app.get('/stats', authMiddleware, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'stats.html'));
 });
 

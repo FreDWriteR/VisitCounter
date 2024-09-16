@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика посещений</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<h1>Статистика посещений</h1>
+<div>
+    <canvas id="hourlyChart"></canvas>
+</div>
+<div>
+    <canvas id="cityChart"></canvas>
+</div>
+
+<script>
+    async function loadStats() {
+        const res = await fetch('/api/stats', {
+            credentials: 'include' // Включаем отправку cookie
+        });
+
+        const data = await res.json();
+
+        const hours = data.map(item => item.hour);
+        const visitCounts = data.map(item => item.count);
+
+        const cities = [...new Set(data.map(item => item.city))];
+        const cityCounts = cities.map(city => data.filter(item => item.city === city).length);
+
+        const hourlyCtx = document.getElementById('hourlyChart').getContext('2d');
+        const cityCtx = document.getElementById('cityChart').getContext('2d');
+
+        new Chart(hourlyCtx, {
+            type: 'bar',
+            data: {
+                labels: hours,
+                datasets: [{
+                    label: 'Посещения по часам',
+                    data: visitCounts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            }
+        });
+
+        new Chart(cityCtx, {
+            type: 'pie',
+            data: {
+                labels: cities,
+                datasets: [{
+                    label: 'Посещения по городам',
+                    data: cityCounts,
+                    backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'],
+                    borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'],
+                    borderWidth: 1
+                }]
+            }
+        });
+    }
+
+    loadStats();
+</script>
+</body>
+</html>

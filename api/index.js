@@ -36,6 +36,7 @@ const generateToken = (username) => jwt.sign({ username }, 'secret', { expiresIn
 // Middleware для проверки авторизации
 const authMiddleware = (req, res, next) => {
     const token = req.cookies['token'];
+    console.log(req.cookies['token']);
     if (!token) return res.redirect('/login');
     try {
         req.user = jwt.verify(token.split(' ')[1], 'secret');

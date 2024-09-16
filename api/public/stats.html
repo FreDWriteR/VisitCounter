@@ -63,5 +63,35 @@
 
     loadStats();
 </script>
+
+<script>
+    async function trackVisit() {
+        try {
+            const res = await fetch('https://ipapi.co/json/');
+            const data = await res.json();
+
+            const visitData = {
+                ip: data.ip,
+                city: data.city,
+                device: navigator.userAgent,
+                timestamp: new Date().toISOString(),
+            };
+
+            // Отправляем данные на сервер
+            await fetch('https://visitcounter-wewp.onrender.com/api/track', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(visitData),
+                credentials: 'include' // Включаем отправку cookie
+            });
+        } catch (error) {
+            console.error('Error tracking visit:', error);
+        }
+    }
+
+    window.onload = trackVisit;
+</script>
 </body>
 </html>

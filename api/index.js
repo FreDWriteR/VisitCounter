@@ -97,6 +97,4 @@ app.get('/api/stats', authMiddleware, (req, res) => {
 });
 
 // Запуск сервера
-app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
-});
+module.exports = app;

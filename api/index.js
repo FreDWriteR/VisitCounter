@@ -65,7 +65,7 @@ app.post('/login', (req, res) => {
 
     if (user && bcrypt.compareSync(password, user.password)) {
         const token = generateToken(username);
-        res.cookie('token', token, { httpOnly: true });
+        res.cookie('token', `Bearer ${token}`, { httpOnly: true });
         res.redirect('/stats');
     } else {
         res.status(401).send('Unauthorized');
